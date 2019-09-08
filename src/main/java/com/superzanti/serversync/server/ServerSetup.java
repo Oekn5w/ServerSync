@@ -65,7 +65,6 @@ public class ServerSetup implements Runnable {
             if (dir.equals("config") || dir.equals("clientmods")) {
                 if (dir.equals("config")) {
                     configsInDirectoryList = true;
-                    directories.add(dir);
                 }
                 continue;
             }
@@ -100,7 +99,10 @@ public class ServerSetup implements Runnable {
         // If the user has added the config directory to the directory list then they are switching to blacklist mode
         // configs in this mode will be treated as standard files
         // TODO clean up this cruft, just let the user switch their config matching list from white to blacklist in the SS config
-        if (!Main.CONFIG.CONFIG_INCLUDE_LIST.isEmpty() && !configsInDirectoryList) {
+        if (configsInDirectoryList) {
+            configFiles = fileManager.getConfigurationFiles(null, EFileMatchingMode.INCLUDE);
+        }
+        else if(!Main.CONFIG.CONFIG_INCLUDE_LIST.isEmpty()) {
             configFiles = fileManager.getConfigurationFiles(Main.CONFIG.CONFIG_INCLUDE_LIST, EFileMatchingMode.INCLUDE);
         }
 
