@@ -76,17 +76,17 @@ public class PathUtils {
 
         Stream<Path> ds = Files.walk(dir);
 
-        ArrayList<Path> dirList = new ArrayList<>();
+        ArrayList<Path> fileList = new ArrayList<>();
 
         Iterator<Path> it = ds.iterator();
         while (it.hasNext()) {
             Path tp = it.next();
             // discard directories
             if (!Files.isDirectory(tp)) {
-                dirList.add(tp);
+                fileList.add(new PathBuilder(tp.toString().replace(Main.ROOT_DIRECTORY, "")).buildPath());
             }
         }
         ds.close();
-        return dirList;
+        return fileList;
     }
 }
