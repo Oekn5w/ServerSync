@@ -111,11 +111,6 @@ public class FileManager {
                 Logger.debug("File matching patterns present");
                 List<Path> filteredFiles = FileMatcher.filter(configFiles, fileMatchingMode);
 
-                Logger.debug(String.format("Configs to sync: %s", filteredFiles.stream()
-                                                                               .map(Path::getFileName)
-                                                                               .map(Path::toString)
-                                                                               .collect(Collectors.joining(", "))));
-
                 return filteredFiles.stream().map(SyncFile::ConfigSyncFile)
                                     .collect(Collectors.toCollection(ArrayList::new));
             }
