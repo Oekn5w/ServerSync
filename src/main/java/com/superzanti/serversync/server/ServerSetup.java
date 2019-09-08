@@ -86,6 +86,7 @@ public class ServerSetup implements Runnable {
 
             clientOnlyFiles = fileManager.getClientOnlyFiles();
             Logger.log(String.format("Found %d files in clientmods", clientOnlyFiles.size()));
+            Logger.debug("Syncable client-only mods are: " + SyncFile.listModNames(clientOnlyFiles).toString());
         }
 
         // Main directory scan for mods
@@ -93,6 +94,7 @@ public class ServerSetup implements Runnable {
         Logger.debug(String.format("Ignore patterns: %s", String.join(", ", Main.CONFIG.FILE_IGNORE_LIST)));
         standardFiles = fileManager.getModFiles(directories, EFileMatchingMode.IGNORE);
         Logger.log(String.format("Found %d files that match user defined patterns", standardFiles.size()));
+        Logger.debug("Syncable mods are: " + SyncFile.listModNames(standardFiles).toString());
 
         /* CONFIGS */
         // If the include list is empty then we have no configs to add
@@ -105,6 +107,8 @@ public class ServerSetup implements Runnable {
         else if(!Main.CONFIG.CONFIG_INCLUDE_LIST.isEmpty()) {
             configFiles = fileManager.getConfigurationFiles(Main.CONFIG.CONFIG_INCLUDE_LIST, EFileMatchingMode.INCLUDE);
         }
+        Logger.log(String.format("Found %d syncable config files", configFiles.size()));
+        Logger.debug("Syncable configs are: " + SyncFile.listModNames(configFiles).toString());
 
         allFiles.addAll(clientOnlyFiles);
         allFiles.addAll(standardFiles);

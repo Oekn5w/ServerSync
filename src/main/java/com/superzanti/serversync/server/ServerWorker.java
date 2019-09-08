@@ -136,7 +136,7 @@ public class ServerWorker implements Runnable {
 
 					serverFileNames.removeAll(new ArrayList<>(Main.CONFIG.FILE_IGNORE_LIST));
 
-					Logger.log("Syncable mods are: " + serverFileNames.toString());
+					Logger.debug("Syncable mods are: " + serverFileNames.toString());
 					oos.writeObject(serverFileNames);
 					oos.flush();
 					continue;
