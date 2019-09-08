@@ -22,7 +22,7 @@ public class PathBuilder {
 	 * @param segment segment to add
 	 */
 	public PathBuilder add(String segment) {
-		if (builder.length() > 0) {			
+		if (builder.length() > 0 && !(builder.substring(builder.length()-1)==FileSystems.getDefault().getSeparator())) {			
 			builder.append(FileSystems.getDefault().getSeparator());
 		}
 		builder.append(segment);
