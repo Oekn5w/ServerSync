@@ -104,12 +104,12 @@ public class ServerSetup implements Runnable {
             configFiles = fileManager.getConfigurationFiles(Main.CONFIG.CONFIG_INCLUDE_LIST, EFileMatchingMode.INCLUDE);
         }
 
-        ServerSetup.allFiles.addAll(ServerSetup.clientOnlyFiles);
-        ServerSetup.allFiles.addAll(ServerSetup.standardFiles);
-        ServerSetup.allFiles.addAll(ServerSetup.configFiles);
+        allFiles.addAll(clientOnlyFiles);
+        allFiles.addAll(standardFiles);
+        allFiles.addAll(configFiles);
 
-        ServerSetup.standardSyncableFiles.addAll(ServerSetup.standardFiles);
-        ServerSetup.standardSyncableFiles.addAll(ServerSetup.configFiles);
+        standardSyncableFiles.addAll(standardFiles);
+        standardSyncableFiles.addAll(configFiles);
     }
 
     @Override
