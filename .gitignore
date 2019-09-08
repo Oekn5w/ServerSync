@@ -70,6 +70,7 @@ $RECYCLE.BIN/
 .gradle/
 publish/
 mods/
+clientmods/
 config/
 bin/
 out/
