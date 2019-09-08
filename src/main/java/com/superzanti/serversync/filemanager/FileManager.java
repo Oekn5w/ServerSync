@@ -107,7 +107,7 @@ public class FileManager {
 
             Logger.debug("Found " + configFiles.size() + " files in: config");
 
-            if (fileMatchPatterns != null) {
+            if (fileMatchPatterns != null && !fileMatchPatterns.isEmpty()) {
                 Logger.debug("File matching patterns present");
                 List<Path> filteredFiles = FileMatcher.filter(configFiles, fileMatchingMode);
 

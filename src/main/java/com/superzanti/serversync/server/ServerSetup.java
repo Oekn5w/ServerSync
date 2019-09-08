@@ -102,7 +102,7 @@ public class ServerSetup implements Runnable {
         // configs in this mode will be treated as standard files
         // TODO clean up this cruft, just let the user switch their config matching list from white to blacklist in the SS config
         if (configsInDirectoryList) {
-            configFiles = fileManager.getConfigurationFiles(null, EFileMatchingMode.INCLUDE);
+            configFiles = fileManager.getConfigurationFiles(Main.CONFIG.CONFIG_INCLUDE_LIST, EFileMatchingMode.IGNORE);
         }
         else if(!Main.CONFIG.CONFIG_INCLUDE_LIST.isEmpty()) {
             configFiles = fileManager.getConfigurationFiles(Main.CONFIG.CONFIG_INCLUDE_LIST, EFileMatchingMode.INCLUDE);
