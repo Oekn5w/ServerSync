@@ -10,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -242,6 +243,10 @@ public class ServerWorker implements Runnable {
 					} catch (ClassNotFoundException e) {
 						Logger.log("Failed to read object from client " + clientsocket);
 						e.printStackTrace();
+						oos.writeObject(new MessageError("Failed to read filePath", EErrorType.STREAM_ACCESS));
+						oos.flush();
+					} catch (NoSuchFileException e) {
+						Logger.log("Failed to access file " + e.getFile());
 						oos.writeObject(new MessageError("Failed to read filePath", EErrorType.STREAM_ACCESS));
 						oos.flush();
 					}
