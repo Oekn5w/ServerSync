@@ -28,6 +28,8 @@ public class Main {
 	public static final String APPLICATION_TITLE = "Serversync";
 	public static final String HANDSHAKE = "HANDSHAKE";
 
+	public static String ROOT_DIRECTORY;
+
 	public static GUI_Client clientGUI;
 	public static GUI_Server serverGUI;
 

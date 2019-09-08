@@ -11,6 +11,8 @@ import java.util.List;
 import com.superzanti.serversync.util.errors.InvalidSyncFileException;
 import com.superzanti.serversync.util.minecraft.MinecraftModInformation;
 
+import runme.Main;
+
 /**
  * Holds all relevant information about a synchronizable file, also handles
  * client only files
@@ -42,16 +44,20 @@ public class SyncFile implements Serializable {
 	}
 
 	public File getFile() {
-		return this.synchronizableFile;
+		return this.getFileAsPath().toFile();
 	}
 
 	public Path getFileAsPath() {
-		return this.synchronizableFile.toPath();
+		PathBuilder pb=new PathBuilder(Main.ROOT_DIRECTORY);
+		pb.add(this.synchronizableFile.toString());
+		return pb.buildPath();
 	}
 
 	public Path getClientSidePath() {
 		// TODO link this to a config value
-		return Paths.get(this.synchronizableFile.getPath().replaceFirst("clientmods", "mods"));
+		PathBuilder pb=new PathBuilder(Main.ROOT_DIRECTORY);
+		pb.add(this.synchronizableFile.toString().replace("clientmods", "mods"));
+		return pb.buildPath();
 	}
 
 	/**
@@ -86,7 +92,7 @@ public class SyncFile implements Serializable {
 	}
 
 	private SyncFile(Path fileToSync, boolean isConfig, boolean isClientSideOnly) {
-		this.synchronizableFile = fileToSync.toFile();
+		this.synchronizableFile = new File(fileToSync.toString().replace(Main.ROOT_DIRECTORY, ""));
 		this.isConfigurationFile = isConfig;
 		this.isClientSideOnlyFile = isClientSideOnly;
 		this.fileHash = FileHash.hashString(this.synchronizableFile);

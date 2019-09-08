@@ -3,8 +3,11 @@ package com.superzanti.serversync.filemanager;
 import com.superzanti.serversync.util.*;
 import com.superzanti.serversync.util.enums.EFileMatchingMode;
 
+import runme.Main;
+
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -21,10 +24,14 @@ public class FileManager {
         String root = PathUtils.getMinecraftDirectory();
 
         if (root == null) {
-            root = "";
+            root = Paths.get("").toAbsolutePath().toString();
         }
 
-        Logger.debug(String.format("root dir: %s", Paths.get(root).toAbsolutePath().toString()));
+        if(FileSystems.getDefault().getSeparator()=="/" && !root.startsWith("/")) { root="/"+root; }
+
+        Main.ROOT_DIRECTORY = root + FileSystems.getDefault().getSeparator();
+
+        Logger.debug(String.format("root dir: %s", Main.ROOT_DIRECTORY));
 
         clientSpecificFilesDirectory = new PathBuilder(root).add("clientmods").buildPath();
         modFilesDirectory = new PathBuilder(root).add("mods").buildPath();
