@@ -92,7 +92,7 @@ public class ServerSetup implements Runnable {
         // Main directory scan for mods
         Logger.log("Starting scan for sync files: " + dateFormatter.format(new Date()));
         Logger.debug(String.format("Ignore patterns: %s", String.join(", ", Main.CONFIG.FILE_IGNORE_LIST)));
-        standardFiles = fileManager.getModFiles(directories, EFileMatchingMode.INGORE);
+        standardFiles = fileManager.getModFiles(directories, EFileMatchingMode.IGNORE);
         Logger.log(String.format("Found %d files that match user defined patterns", standardFiles.size()));
 
         /* CONFIGS */

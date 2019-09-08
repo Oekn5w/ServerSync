@@ -16,7 +16,7 @@ public class FileMatcher {
 			// Only include files that match patterns in the white-list, or included
 			// files list
 			return include.matches(file);
-		case INGORE:
+		case IGNORE:
 			// We don't want to include the file if it matches an ignore list pattern
 			// as the user has declared that said file should not be included
 			return !ignore.matches(file);
@@ -30,7 +30,7 @@ public class FileMatcher {
 		case INCLUDE:
 			return files.stream().filter(file -> include.matches(file))
 					.collect(Collectors.toCollection(ArrayList::new));
-		case INGORE:
+		case IGNORE:
 			return files.stream().filter(file -> !ignore.matches(file))
 					.collect(Collectors.toCollection(ArrayList::new));
 		default:
