@@ -23,66 +23,83 @@ public class FileManager {
     public FileManager() {
         String root = PathUtils.getMinecraftDirectory();
 
-        if (root == null) {
-            root = Paths.get("").toAbsolutePath().toString();
-        }
-
-        if(FileSystems.getDefault().getSeparator()=="/" && !root.startsWith("/")) { root="/"+root; }
-
-        Main.ROOT_DIRECTORY = root + FileSystems.getDefault().getSeparator();
+        Main.ROOT_DIRECTORY = root;
 
         Logger.debug(String.format("root dir: %s", Main.ROOT_DIRECTORY));
 
-        clientSpecificFilesDirectory = new PathBuilder(root).add("clientmods").buildPath();
+        clientSpecificFilesDirectory = new PathBuilder(root).add("client").buildPath();
         modFilesDirectory = new PathBuilder(root).add("mods").buildPath();
         configurationFilesDirectory = new PathBuilder(root).add("config").buildPath();
         logsDirectory = new PathBuilder(root).add("logs").buildPath();
     }
 
     public ArrayList<SyncFile> getModFiles(
-        List<String> includedDirectories,
         EFileMatchingMode fileMatchingMode
     ) {
-        return includedDirectories
-            .stream()
-            .map(Paths::get)
-            .filter(path -> {
-                // Check for valid include directories
-                if (!Files.exists(path)) {
-                    Logger.debug(String.format("Could not find directory: %s", path.toString()));
-                    return false;
-                }
-                if (!Files.isDirectory(path)) {
-                    Logger.debug(String.format("Included directory (%s) was not a directory!", path.getFileName()));
-                    return false;
-                }
-                return true;
-            })
+        try {
+            ArrayList<Path> modFiles = PathUtils.fileListDeep(modFilesDirectory);
 
-            .map(dir -> {
-                // Get files from valid directories
-                try {
-                    return PathUtils.fileListDeep(dir);
-                } catch (IOException e) {
-                    Logger.debug(e);
-                    Logger.error("Failed to access files from directory: " + dir.getFileName());
-                }
-                return new ArrayList<Path>(0);
-            })
-            .flatMap(ArrayList::stream)
-            .filter(file -> {
-                if (file == null) {
-                    return false;
-                }
-                // Filter out user ignored files
-                if (fileMatchingMode == EFileMatchingMode.NONE) {
-                    return true;
-                }
-                return FileMatcher.shouldIncludeFile(file, fileMatchingMode);
-            })
-            // Create sync files for the remaining valid list
-            .map(SyncFile::StandardSyncFile)
-            .collect(Collectors.toCollection(ArrayList::new));
+            Logger.debug("Found " + modFiles.size() + " files in: config");
+
+            return modFiles
+                .stream()
+                .filter(file -> {
+                    if (file == null) {
+                        return false;
+                    }
+                    // Filter out user ignored files
+                    if (fileMatchingMode == EFileMatchingMode.NONE) {
+                        return true;
+                    }
+                    return FileMatcher.shouldIncludeFile(file, fileMatchingMode);
+                })
+                .map(SyncFile::StandardSyncFile)
+                .collect(Collectors.toCollection(ArrayList::new));
+        } catch (IOException e) {
+            Logger.error("Failed to access configuration files.");
+        }
+        return new ArrayList<>(0);
+
+        // return includedDirectories
+        //     .stream()
+        //     .map(Paths::get)
+        //     .filter(path -> {
+        //         // Check for valid include directories
+        //         if (!Files.exists(path)) {
+        //             Logger.debug(String.format("Could not find directory: %s", path.toString()));
+        //             return false;
+        //         }
+        //         if (!Files.isDirectory(path)) {
+        //             Logger.debug(String.format("Included directory (%s) was not a directory!", path.getFileName()));
+        //             return false;
+        //         }
+        //         return true;
+        //     })
+
+        //     .map(dir -> {
+        //         // Get files from valid directories
+        //         try {
+        //             return PathUtils.fileListDeep(dir);
+        //         } catch (IOException e) {
+        //             Logger.debug(e);
+        //             Logger.error("Failed to access files from directory: " + dir.getFileName());
+        //         }
+        //         return new ArrayList<Path>(0);
+        //     })
+        //     .flatMap(ArrayList::stream)
+        //     .filter(file -> {
+        //         if (file == null) {
+        //             return false;
+        //         }
+        //         // Filter out user ignored files
+        //         if (fileMatchingMode == EFileMatchingMode.NONE) {
+        //             return true;
+        //         }
+        //         return FileMatcher.shouldIncludeFile(file, fileMatchingMode);
+        //     })
+        //     // Create sync files for the remaining valid list
+        //     .map(SyncFile::StandardSyncFile)
+        //     .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ArrayList<SyncFile> getClientOnlyFiles() {
@@ -93,7 +110,7 @@ public class FileManager {
                                       .map(SyncFile::ClientOnlySyncFile)
                                       .collect(Collectors.toCollection(ArrayList::new));
         } catch (IOException e) {
-            Logger.error("Failed to find any client specific files (clientmods)");
+            Logger.error("Failed to find any client specific files (client)");
         }
         return new ArrayList<>(0);
     }

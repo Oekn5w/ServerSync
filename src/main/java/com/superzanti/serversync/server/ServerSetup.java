@@ -62,7 +62,7 @@ public class ServerSetup implements Runnable {
         /* SYNC DIRECTORIES */
         for (String dir : Main.CONFIG.DIRECTORY_INCLUDE_LIST) {
             // Specific config handling later
-            if (dir.equals("config") || dir.equals("clientmods")) {
+            if (dir.equals("config") || dir.equals("client")) {
                 if (dir.equals("config")) {
                     configsInDirectoryList = true;
                 }
@@ -73,26 +73,26 @@ public class ServerSetup implements Runnable {
 
         if (Main.CONFIG.PUSH_CLIENT_MODS) {
             Logger.log("Server configured to push client only mods, clients can still refuse these mods!");
-            // Create clientmods directory if it does not exist
-            Path clientOnlyMods = Paths.get("clientmods/");
+            // Create client directory if it does not exist
+            Path clientOnlyMods = Paths.get("client/");
             if (!Files.exists(clientOnlyMods)) {
                 try {
                     Files.createDirectories(clientOnlyMods);
-                    Logger.log("clientmods directory did not exist, creating");
+                    Logger.log("client directory did not exist, creating");
                 } catch (IOException e) {
-                    Logger.error("Could not create clientmods directory");
+                    Logger.error("Could not create client directory");
                 }
             }
 
             clientOnlyFiles = fileManager.getClientOnlyFiles();
-            Logger.log(String.format("Found %d files in clientmods", clientOnlyFiles.size()));
+            Logger.log(String.format("Found %d files in client subfolder", clientOnlyFiles.size()));
             Logger.debug("Syncable client-only mods are: " + SyncFile.listModNames(clientOnlyFiles).toString());
         }
 
         // Main directory scan for mods
         Logger.log("Starting scan for sync files: " + dateFormatter.format(new Date()));
         Logger.debug(String.format("Ignore patterns: %s", String.join(", ", Main.CONFIG.FILE_IGNORE_LIST)));
-        standardFiles = fileManager.getModFiles(directories, EFileMatchingMode.IGNORE);
+        standardFiles = fileManager.getModFiles(EFileMatchingMode.IGNORE);
         Logger.log(String.format("Found %d files that match user defined patterns", standardFiles.size()));
         Logger.debug("Syncable mods are: " + SyncFile.listModNames(standardFiles).toString());
 

@@ -70,14 +70,14 @@ public class SyncConfig {
 	
 	public static boolean pullServerConfig = true;
 	
-	public SyncConfig(EConfigType type) {
+	public SyncConfig(String root, EConfigType type) {
 		this.FILE_IGNORE_LIST.add("serversync-*.jar");
 		configType = type;
 		config = new MinecraftConfig();
 		if (configType == EConfigType.SERVER) {			
-			configPath = Paths.get(CONFIG_LOCATION + File.separator + "serversync-server.cfg");
+			configPath = Paths.get(root + File.separator + CONFIG_LOCATION + File.separator + "serversync-server.cfg");
 		} else {
-			configPath = Paths.get(CONFIG_LOCATION + File.separator + "serversync-client.cfg");
+			configPath = Paths.get(root + File.separator + CONFIG_LOCATION + File.separator + "serversync-client.cfg");
 		}
 		
 		if (!Files.exists(configPath.getParent())) {

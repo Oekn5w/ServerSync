@@ -87,10 +87,7 @@ public class ClientWorker implements Runnable {
             }
         }
 
-        List<SyncFile> clientFiles = fileManager.getModFiles(
-            directories,
-            EFileMatchingMode.IGNORE
-        );
+        List<SyncFile> clientFiles = fileManager.getModFiles(EFileMatchingMode.IGNORE);
 
         if (addConfigFiles) {
             ArrayList<SyncFile> configurationFiles = fileManager

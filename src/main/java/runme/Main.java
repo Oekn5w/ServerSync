@@ -1,5 +1,6 @@
 package runme;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -20,6 +21,7 @@ import com.superzanti.serversync.server.ServerSetup;
 import com.superzanti.serversync.util.Logger;
 import com.superzanti.serversync.util.ProgramArguments;
 import com.superzanti.serversync.util.enums.EConfigType;
+import com.superzanti.serversync.util.PathUtils;
 
 public class Main {
 
@@ -29,6 +31,7 @@ public class Main {
 	public static final String HANDSHAKE = "HANDSHAKE";
 
 	public static String ROOT_DIRECTORY;
+	public static String ROOT_DIRECTORY_CLIENT;
 
 	public static GUI_Client clientGUI;
 	public static GUI_Server serverGUI;
@@ -36,6 +39,8 @@ public class Main {
 	public static ResourceBundle strings;
 
 	public static SyncConfig CONFIG;
+
+	public static boolean isServer;
 
 	public static ProgramArguments arguments;
 
@@ -87,13 +92,24 @@ public class Main {
 			System.out.println("No language file available for: " + CONFIG.LOCALE + ", defaulting to en_US");
 			strings = ResourceBundle.getBundle("assets.serversync.lang.MessagesBundle", new Locale("en", "US"));
 		}
+
+		String root = PathUtils.getMinecraftDirectory();
+
+		ROOT_DIRECTORY = root;
+		ROOT_DIRECTORY_CLIENT = Main.ROOT_DIRECTORY;
+
+        Logger.debug(String.format("CommonInit: root dir: %s", Main.ROOT_DIRECTORY));
+
 	}
 
 	private static void runInServerMode() {
 		new Logger("server");
 		Logger.setSystemOutput(true);
-		CONFIG = new SyncConfig(EConfigType.SERVER);
+		CONFIG = new SyncConfig(PathUtils.getMinecraftDirectory(), EConfigType.SERVER);
+		isServer = true;
 		commonInit();
+
+		ROOT_DIRECTORY_CLIENT += "client" + File.separator;
 
 		ServerSetup setup = new ServerSetup();
 		Thread serverThread = new Thread(setup, "Server client listener");
@@ -102,7 +118,8 @@ public class Main {
 
 	private static void runInClientMode() {
 		new Logger("client");
-		CONFIG = new SyncConfig(EConfigType.CLIENT);
+		CONFIG = new SyncConfig(PathUtils.getMinecraftDirectory(), EConfigType.CLIENT);
+		isServer = false;
 		commonInit();
 
 		Thread clientThread;

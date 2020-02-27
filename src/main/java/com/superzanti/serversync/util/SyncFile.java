@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,8 +54,8 @@ public class SyncFile implements Serializable {
 
 	public Path getClientSidePath() {
 		// TODO link this to a config value
-		PathBuilder pb=new PathBuilder(Main.ROOT_DIRECTORY);
-		pb.add(this.synchronizableFile.toString().replace("clientmods", "mods"));
+		PathBuilder pb=new PathBuilder(Main.ROOT_DIRECTORY_CLIENT);
+		pb.add(this.synchronizableFile.toString());
 		return pb.buildPath();
 	}
 
@@ -92,9 +91,16 @@ public class SyncFile implements Serializable {
 	}
 
 	private SyncFile(Path fileToSync, boolean isConfig, boolean isClientSideOnly) {
-		this.synchronizableFile = new File(fileToSync.toString().replace(Main.ROOT_DIRECTORY, ""));
 		this.isConfigurationFile = isConfig;
 		this.isClientSideOnlyFile = isClientSideOnly;
+		if(!isClientSideOnly)
+		{
+			this.synchronizableFile = new File(fileToSync.toString().replace(Main.ROOT_DIRECTORY, ""));
+		}
+		else
+		{
+			this.synchronizableFile = new File(fileToSync.toString().replace(Main.ROOT_DIRECTORY_CLIENT, ""));
+		}
 		this.fileHash = FileHash.hashString(this.synchronizableFile);
 
 		if (!isConfig) {

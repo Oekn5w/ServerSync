@@ -4,8 +4,10 @@ import runme.Main;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -38,7 +40,7 @@ public class PathUtils {
         String jarFilePath = jarFile.getAbsolutePath();
 
         if (Main.MCroot != "") {
-            return Main.MCroot;
+            return postprocessRoot(Main.MCroot);
         }
 
         List<String> parts = getPathParts(jarFilePath);
@@ -50,18 +52,23 @@ public class PathUtils {
 
         if (parts.contains("mods")) {
             // ASSUMPTION: We are most likely in the mods directory of a minecraft directory
-            List<String> root = parts.subList(0, parts.indexOf("mods"));
+            List<String> rootArr = parts.subList(0, parts.indexOf("mods"));
             PathBuilder builder = new PathBuilder();
-            root.forEach(builder::add);
+            rootArr.forEach(builder::add);
 
-            return builder.toString();
+            return postprocessRoot(builder.toString());
         }
 
         // ASSUMPTION: As users are instructed to put ServerSync in the Minecraft
         // directory we can assume that the current directory is where serversync is
         // supposed to be, as we are asking for the Minecraft directory it should be
         // handled elsewhere when the directory can not be found
-        return null;
+        return postprocessRoot(Paths.get("").toAbsolutePath().toString());
+    }
+
+    private static String postprocessRoot(String root) {
+        if(FileSystems.getDefault().getSeparator()=="/" && !root.startsWith("/")) { root="/"+root; }
+        return root + FileSystems.getDefault().getSeparator();
     }
 
     private static List<String> getPathParts(String path) {
@@ -87,7 +94,7 @@ public class PathUtils {
             Path tp = it.next();
             // discard directories
             if (!Files.isDirectory(tp)) {
-                fileList.add(new PathBuilder(tp.toString().replace(Main.ROOT_DIRECTORY, "")).buildPath());
+                fileList.add(new PathBuilder(tp.toString()).buildPath());
             }
         }
         ds.close();

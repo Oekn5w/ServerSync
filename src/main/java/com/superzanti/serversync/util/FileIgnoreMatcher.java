@@ -14,7 +14,7 @@ public class FileIgnoreMatcher extends GlobPathMatcher {
 	@Override
 	public boolean matches(Path path) {
 		for (String pattern : Main.CONFIG.FILE_IGNORE_LIST) {
-			super.setPattern(pattern);
+			super.setPattern(Main.ROOT_DIRECTORY + pattern);
 			
 			if (super.matches(path)) {
 				return true;
