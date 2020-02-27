@@ -37,6 +37,10 @@ public class PathUtils {
         File jarFile = getServerSyncFile();
         String jarFilePath = jarFile.getAbsolutePath();
 
+        if (Main.MCroot != "") {
+            return Main.MCroot;
+        }
+
         List<String> parts = getPathParts(jarFilePath);
 
         if (parts.contains("file:")) {

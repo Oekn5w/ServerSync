@@ -69,9 +69,7 @@ $RECYCLE.BIN/
 .metadata
 .gradle/
 publish/
-mods/
-clientmods/
-config/
+minecraft-dev/
 bin/
 out/
 build/

@@ -9,6 +9,7 @@ public class ProgramArguments {
 	public final boolean syncSilent;
 	public final boolean syncProgressOnly;
 	public final boolean cleanup;
+	public String MCRoot = "";
 	
 	public ProgramArguments(String[] arguments) {
 		List<String> args = Arrays.asList(arguments);
@@ -16,5 +17,9 @@ public class ProgramArguments {
 		this.syncSilent = args.contains("silent");
 		this.syncProgressOnly = args.contains("progress-only");
 		this.cleanup = args.contains("cleanup");
+		if (args.contains("MCroot")) {
+			int i = args.indexOf("MCroot");
+			this.MCRoot = args.get(i+1);
+		}
 	}
 }

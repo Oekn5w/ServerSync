@@ -39,8 +39,12 @@ public class Main {
 
 	public static ProgramArguments arguments;
 
+	public static String MCroot = null;
+
 	public static void main(String[] args) {
 		arguments = new ProgramArguments(args);
+
+		MCroot = arguments.MCRoot;
 
 		if (arguments.isServer) {
 			runInServerMode();
