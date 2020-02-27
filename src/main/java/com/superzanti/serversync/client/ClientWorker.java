@@ -112,7 +112,7 @@ public class ClientWorker implements Runnable {
             SyncFile clientFile;
             if (serverFile.isClientSideOnlyFile) {
                 // TODO link this to a config value
-                clientFile = SyncFile.ClientOnlySyncFile(serverFile.getClientSidePath());
+                clientFile = SyncFile.ClientOnlySyncFile(serverFile.getFileAsPath());
                 ignoredClientSideFiles.add(clientFile);
                 Logger.log(Main.strings.getString("mods_clientmod_added") + ": " + clientFile.getFileName());
             } else {
@@ -163,7 +163,7 @@ public class ClientWorker implements Runnable {
                 if (!serverFiles.contains(clientFile)) {
                     if (clientFile.delete()) {
                         Logger.log("<>" + clientFile.getFileName() + " " + Main.strings.getString("delete_success"));
-                        Path parentDirectory = clientFile.getClientSidePath().getParent();
+                        Path parentDirectory = clientFile.getFileAsPath().getParent();
 
                         if (parentDirectory != null && Files.isDirectory(parentDirectory)
                             && !parentDirectory.getFileName().toString().matches("mods|minecraft")) {

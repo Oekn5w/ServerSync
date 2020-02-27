@@ -47,14 +47,12 @@ public class SyncFile implements Serializable {
 	}
 
 	public Path getFileAsPath() {
-		PathBuilder pb=new PathBuilder(Main.ROOT_DIRECTORY);
-		pb.add(this.synchronizableFile.toString());
-		return pb.buildPath();
-	}
-
-	public Path getClientSidePath() {
-		// TODO link this to a config value
-		PathBuilder pb=new PathBuilder(Main.ROOT_DIRECTORY_CLIENT);
+		PathBuilder pb = new PathBuilder();
+		if(!this.isClientSideOnlyFile) {
+			pb.add(Main.ROOT_DIRECTORY);
+		} else {
+			pb.add(Main.ROOT_DIRECTORY_CLIENT);
+		}
 		pb.add(this.synchronizableFile.toString());
 		return pb.buildPath();
 	}
@@ -199,7 +197,7 @@ public class SyncFile implements Serializable {
 		}
 		
 		// Make sure files are in the same location
-		if (!this.getClientSidePath().toAbsolutePath().toString().equals(otherSyncFile.getClientSidePath().toAbsolutePath().toString())) {
+		if (!this.getFileAsPath().toAbsolutePath().toString().equals(otherSyncFile.getFileAsPath().toAbsolutePath().toString())) {
 			return false;
 		}
 
